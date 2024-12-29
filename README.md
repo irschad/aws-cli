@@ -18,7 +18,7 @@ This project demonstrates how to interact with AWS resources using the AWS Comma
 
 ---
 
-## Step 1: Install and Configure AWS CLI
+## Step 1: Configure AWS CLI
 ### Command:
 ```bash
 aws configure
@@ -42,7 +42,6 @@ aws_secret_access_key=************************
 ```bash
 aws ec2 describe-vpcs --query "Vpcs[].VpcId"
 ```
-#### Output:
 ```json
 [
     "vpc-094e263a5e8aa7dca",
@@ -54,7 +53,6 @@ aws ec2 describe-vpcs --query "Vpcs[].VpcId"
 ```bash
 aws ec2 create-security-group --group-name my-sg --description "My SG" --vpc-id vpc-02b046adc6650bdb6
 ```
-#### Output:
 ```json
 {
     "GroupId": "sg-0f366dec7784c7264"
@@ -67,7 +65,69 @@ aws ec2 authorize-security-group-ingress \
 --group-id sg-0f366dec7784c7264 \
 --protocol tcp \
 --port 22 \
---cidr YOUR_IP_ADDRESS/32
+--cidr 227.231.27.134/32
+```
+```json
+{
+    "Return": true,
+    "SecurityGroupRules": [
+        {
+            "SecurityGroupRuleId": "sgr-0a2b4ba619a4071ea",
+            "GroupId": "sg-0f366dec7784c7264",
+            "GroupOwnerId": "922854651834",
+            "IsEgress": false,
+            "IpProtocol": "tcp",
+            "FromPort": 22,
+            "ToPort": 22,
+            "CidrIpv4": "227.231.27.134/32"
+        }
+    ]
+}
+```
+### Describe Security Group:
+```bash
+aws ec2 describe-security-groups --group-ids sg-0f366dec7784c7264
+```
+```json
+{
+    "SecurityGroups": [
+        {
+            "Description": "My SG",
+            "GroupName": "my-sg",
+            "IpPermissions": [
+                {
+                    "FromPort": 22,
+                    "IpProtocol": "tcp",
+                    "IpRanges": [
+                        {
+                            "CidrIp": "227.231.27.134/32"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": [],
+                    "ToPort": 22,
+                    "UserIdGroupPairs": []
+                }
+            ],
+            "OwnerId": "922854651834",
+            "GroupId": "sg-0f366dec7784c7264",
+            "IpPermissionsEgress": [
+                {
+                    "IpProtocol": "-1",
+                    "IpRanges": [
+                        {
+                            "CidrIp": "0.0.0.0/0"
+                        }
+                    ],
+                    "Ipv6Ranges": [],
+                    "PrefixListIds": [],
+                    "UserIdGroupPairs": []
+                }
+            ],
+            "VpcId": "vpc-02b046adc6650bdb6"
+        }
+    ]
+}
 ```
 
 ---
@@ -80,7 +140,7 @@ aws ec2 create-key-pair \
 --query 'KeyMaterial' \
 --output text > MyKpCli.pem
 ```
-#### Adjust Permissions:
+#### Restrict permissions:
 ```bash
 chmod 400 MyKpCli.pem
 ```
@@ -98,8 +158,8 @@ aws ec2 run-instances \
 --security-group-ids sg-0f366dec7784c7264 \
 --subnet-id subnet-03d3ed0a20397d803
 ```
-#### Output:
 ```json
+--
 {
     "Instances": [
         {
@@ -109,45 +169,214 @@ aws ec2 run-instances \
         }
     ]
 }
+--
 ```
+---
+## Step 5: SSH into the new EC2 instance
 
+$ ssh -i MyKpCli.pem ec2-user@44.222.166.107
+The authenticity of host '44.222.166.107 (44.222.166.107)' can't be established.
+ED25519 key fingerprint is SHA256:0pBybF7Vmzpw+xKMkWANPKVzNiHwRRlL4glFVBAmlzao.
+This key is not known by any other names
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added '44.222.166.107' (ED25519) to the list of known hosts.
+   ,     #_
+   ~\_  ####_        Amazon Linux 2023
+  ~~  \_#####\
+  ~~     \###|
+  ~~       \#/ ___   https://aws.amazon.com/linux/amazon-linux-2023
+   ~~       V~' '->
+    ~~~         /
+      ~~._.   _/
+         _/ _/
+       _/m/'
+$ exit 
+---
+## Step 6: Filter and Query 
+```bash
+aws ec2 describe-instances --filters "Name=instance-type,Values=t2.micro" --query "Reservations[].Instances[].InstanceId"
+```
+```json
+[
+    "i-0e4594f32c6dbe39a",
+    "i-00c8bbe17ceaa4a4f"
+]
+```
 ---
 
-## Step 5: Manage IAM Resources
+## Step 7: Manage IAM Resources
+
 ### Create a Group:
 ```bash
 aws iam create-group --group-name MyGroupCli
 ```
+```json
+{
+    "Group": {
+        "Path": "/",
+        "GroupName": "MyGroupCli",
+        "GroupId": "AGPA5NXTMO65DSTTOPCZI",
+        "Arn": "arn:aws:iam::922854651834:group/MyGroupCli",
+        "CreateDate": "2024-10-29T11:55:37+00:00"
+    }
+}
+```
+
 ### Create a User:
 ```bash
 aws iam create-user --user-name MyUserCli
 ```
+```json
+{
+    "User": {
+        "Path": "/",
+        "UserName": "MyUserCli",
+        "UserId": "AIDA5NXTMO65HDDV67IYJ",
+        "Arn": "arn:aws:iam::922854651834:user/MyUserCli",
+        "CreateDate": "2024-12-29T11:56:14+00:00"
+    }
+}
+```
+
 ### Add User to Group:
 ```bash
 aws iam add-user-to-group --user-name MyUserCli --group-name MyGroupCli
 ```
+```bash
+aws iam get-group --group-name MyGroupCli
+```
+```json
+{
+    "Users": [
+        {
+            "Path": "/",
+            "UserName": "MyUserCli",
+            "UserId": "AIDA5NXTMO65HDDV67IYJ",
+            "Arn": "arn:aws:iam::922854651834:user/MyUserCli",
+            "CreateDate": "2024-10-29T11:56:14+00:00"
+        }
+    ],
+    "Group": {
+        "Path": "/",
+        "GroupName": "MyGroupCli",
+        "GroupId": "AGPA5NXTMO65DSTTOPCZI",
+        "Arn": "arn:aws:iam::922854651834:group/MyGroupCli",
+        "CreateDate": "2024-10-29T11:55:37+00:00"
+    }
+}
+```
+
 ### Attach Policy to Group:
 ```bash
+- Get ARN of AmazonEC2FullAccess policy
+aws iam list-policies --query 'Policies[?PolicyName==`AmazonEC2FullAccess`].Arn' --output text
+arn:aws:iam::aws:policy/AmazonEC2FullAccess
+
+- Attach the group policy
 aws iam attach-group-policy --group-name MyGroupCli --policy-arn arn:aws:iam::aws:policy/AmazonEC2FullAccess
 ```
 
----
-
-## Step 6: Query AWS Resources
-### Describe Instances:
+- List attached group policies
 ```bash
-aws ec2 describe-instances --query "Reservations[].Instances[].InstanceId"
-```
-#### Output:
-```json
-[
-    "i-00c8bbe17ceaa4a4f"
-]
+aws iam list-attached-group-policies --group-name MyGroupCli
+{
+    "AttachedPolicies": [
+        {
+            "PolicyName": "AmazonEC2FullAccess",
+            "PolicyArn": "arn:aws:iam::aws:policy/AmazonEC2FullAccess"
+        }
+    ]
+}
 ```
 
 ---
 
-## Step 7: Cleanup - Delete Resources
+### Create Credentials for new User
+- Create Login profile
+```bash
+aws iam create-login-profile --user-name MyUserCli --password MyPassword! --password-reset-required
+```
+```json
+{
+    "LoginProfile": {
+        "UserName": "MyUserCli",
+        "CreateDate": "2024-10-29T12:14:13+00:00",
+        "PasswordResetRequired": true
+    }
+}
+```
+- Get account ID:
+```bash
+aws iam get-user --user-name MyUserCli
+```
+```json
+{
+    "User": {
+        "Path": "/",
+        "UserName": "MyUserCli",
+        "UserId": "AIDA5NXTMO65HDDV67IYJ",
+        "Arn": "arn:aws:iam::922854651834:user/MyUserCli",
+        "CreateDate": "2024-10-29T11:56:14+00:00"
+    }
+}
+```
+
+### Create Policy and assign to group
+- Write policy for password change
+```bash
+vi changePwdpolicy.json
+```
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "iam:GetAccountPasswordPolicy",
+      "Resource": "*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": "iam:ChangePassword",
+      "Resource": "arn:aws:iam::*:user/${aws:username}"
+    }
+  ]
+}
+```
+- Create policy
+
+```bash
+aws iam create-policy --policy-name changePwd --policy-document file://changePwdPolicy.json
+```
+```json
+{
+    "Policy": {
+        "PolicyName": "changePwd",
+        "PolicyId": "ANPA5NXTMO65BHTV3XUB4",
+        "Arn": "arn:aws:iam::922854651834:policy/changePwd",
+        "Path": "/",
+        "DefaultVersionId": "v1",
+        "AttachmentCount": 0,
+        "PermissionsBoundaryUsageCount": 0,
+        "IsAttachable": true,
+        "CreateDate": "2024-10-29T12:23:37+00:00",
+        "UpdateDate": "2024-10-29T12:23:37+00:00"
+    }
+}
+```
+- Attach group policy
+```bash
+aws iam attach-group-policy --group-name MyGroupCli --policy-arn arn:aws:iam::922854651834:policy/changePwd
+```
+- Test it by logging it to AWS console with this user. Change the password and login with new password.
+---
+
+### Create Access Keys for a new User
+```bash
+aws iam create-access-key --user-name MyUserCli
+```
+
+## Step 8: Cleanup - Delete Resources
 ### Terminate EC2 Instances:
 ```bash
 aws ec2 terminate-instances --instance-ids i-00c8bbe17ceaa4a4f
