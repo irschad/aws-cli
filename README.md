@@ -173,7 +173,7 @@ aws ec2 run-instances \
 ```
 ---
 ## Step 5: SSH into the new EC2 instance
-
+```bash
 $ ssh -i MyKpCli.pem ec2-user@44.222.166.107
 The authenticity of host '44.222.166.107 (44.222.166.107)' can't be established.
 ED25519 key fingerprint is SHA256:0pBybF7Vmzpw+xKMkWANPKVzNiHwRRlL4glFVBAmlzao.
@@ -190,7 +190,8 @@ Warning: Permanently added '44.222.166.107' (ED25519) to the list of known hosts
       ~~._.   _/
          _/ _/
        _/m/'
-$ exit 
+$ exit
+```
 ---
 ## Step 6: Filter and Query 
 ```bash
