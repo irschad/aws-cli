@@ -324,6 +324,7 @@ aws iam get-user --user-name MyUserCli
 
 ### Create Policy and assign to group
 - Write policy for password change
+  Refer ([User Guide](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_passwords_enable-user-change.html))
 ```bash
 vi changePwdpolicy.json
 ```
