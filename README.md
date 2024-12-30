@@ -20,10 +20,17 @@ This project demonstrates how to interact with AWS resources using the AWS Comma
 
 ## Step 1: Configure AWS CLI
 ### Command:
+Configure the AWS CLI using AWS Access Key ID and AWS Secret Access Key of existing admin user. 
+
 ```bash
 aws configure
+
+  AWS Access Key ID [None]: <access-key-id> 
+  AWS Secret Access Key [None]: <secret-access-key> 
+  Default region name [None]: us-east-1
+  Default output format [None]: json
 ```
-### Output:
+### Check the configuration:
 ```bash
 cat ~/.aws/config
 [default]
@@ -74,7 +81,7 @@ aws ec2 authorize-security-group-ingress \
         {
             "SecurityGroupRuleId": "sgr-0a2b4ba619a4071ea",
             "GroupId": "sg-0f366dec7784c7264",
-            "GroupOwnerId": "922854651834",
+            "GroupOwnerId": "<owner-id>",
             "IsEgress": false,
             "IpProtocol": "tcp",
             "FromPort": 22,
@@ -109,7 +116,7 @@ aws ec2 describe-security-groups --group-ids sg-0f366dec7784c7264
                     "UserIdGroupPairs": []
                 }
             ],
-            "OwnerId": "922854651834",
+            "OwnerId": "<owner-id>",
             "GroupId": "sg-0f366dec7784c7264",
             "IpPermissionsEgress": [
                 {
@@ -221,7 +228,7 @@ aws iam create-group --group-name MyGroupCli
         "Path": "/",
         "GroupName": "MyGroupCli",
         "GroupId": "AGPA5NXTMO65DSTTOPCZI",
-        "Arn": "arn:aws:iam::922854651834:group/MyGroupCli",
+        "Arn": "arn:aws:iam::<owner-id>:group/MyGroupCli",
         "CreateDate": "2024-10-29T11:55:37+00:00"
     }
 }
@@ -237,7 +244,7 @@ aws iam create-user --user-name MyUserCli
         "Path": "/",
         "UserName": "MyUserCli",
         "UserId": "AIDA5NXTMO65HDDV67IYJ",
-        "Arn": "arn:aws:iam::922854651834:user/MyUserCli",
+        "Arn": "arn:aws:iam::<owner-id>:user/MyUserCli",
         "CreateDate": "2024-10-29T11:56:14+00:00"
     }
 }
@@ -257,7 +264,7 @@ aws iam get-group --group-name MyGroupCli
             "Path": "/",
             "UserName": "MyUserCli",
             "UserId": "AIDA5NXTMO65HDDV67IYJ",
-            "Arn": "arn:aws:iam::922854651834:user/MyUserCli",
+            "Arn": "arn:aws:iam::<owner-id>:user/MyUserCli",
             "CreateDate": "2024-10-29T11:56:14+00:00"
         }
     ],
@@ -265,7 +272,7 @@ aws iam get-group --group-name MyGroupCli
         "Path": "/",
         "GroupName": "MyGroupCli",
         "GroupId": "AGPA5NXTMO65DSTTOPCZI",
-        "Arn": "arn:aws:iam::922854651834:group/MyGroupCli",
+        "Arn": "arn:aws:iam::<owner-id>:group/MyGroupCli",
         "CreateDate": "2024-10-29T11:55:37+00:00"
     }
 }
@@ -320,7 +327,7 @@ aws iam get-user --user-name MyUserCli
         "Path": "/",
         "UserName": "MyUserCli",
         "UserId": "AIDA5NXTMO65HDDV67IYJ",
-        "Arn": "arn:aws:iam::922854651834:user/MyUserCli",
+        "Arn": "arn:aws:iam::<owner-id>:user/MyUserCli",
         "CreateDate": "2024-10-29T11:56:14+00:00"
     }
 }
@@ -359,7 +366,7 @@ aws iam create-policy --policy-name changePwd --policy-document file://changePwd
     "Policy": {
         "PolicyName": "changePwd",
         "PolicyId": "ANPA5NXTMO65BHTV3XUB4",
-        "Arn": "arn:aws:iam::922854651834:policy/changePwd",
+        "Arn": "arn:aws:iam::<owner-id>:policy/changePwd",
         "Path": "/",
         "DefaultVersionId": "v1",
         "AttachmentCount": 0,
@@ -372,7 +379,7 @@ aws iam create-policy --policy-name changePwd --policy-document file://changePwd
 ```
 - Attach group policy
 ```bash
-aws iam attach-group-policy --group-name MyGroupCli --policy-arn arn:aws:iam::922854651834:policy/changePwd
+aws iam attach-group-policy --group-name MyGroupCli --policy-arn arn:aws:iam::<owner-id>:policy/changePwd
 ```
 - Test it by logging it to AWS console with this user. Change the password and login with new password.
 ![change password](https://github.com/user-attachments/assets/f96854cd-c83e-48d9-a12d-4c4506a627a8)
@@ -420,7 +427,7 @@ aws iam detach-group-policy --group-name MyGroupCli --policy-arn arn:aws:iam::aw
 
 ### Delete policy:
 ```bash
-aws iam delete-policy --policy-arn arn:aws:iam::922854651834:policy/changePwd
+aws iam delete-policy --policy-arn arn:aws:iam::<owner-id>:policy/changePwd
 ```
 
 ### Delete login profile:
