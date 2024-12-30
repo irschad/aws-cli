@@ -148,7 +148,11 @@ chmod 400 MyKpCli.pem
 ---
 
 ## Step 4: Launch an EC2 Instance
-### Command:
+
+Check AMI ID to be used at AWS console from Launch Instances -> Quick Start AMIs, and copy the AMI ID and use in below command.
+![Quick Start AMIs](https://github.com/user-attachments/assets/8d3d4441-e21f-44a2-b619-94f1113d1d5b)
+
+
 ```bash
 aws ec2 run-instances \
 --image-id ami-01816d07b1128cd2d \
@@ -371,6 +375,8 @@ aws iam create-policy --policy-name changePwd --policy-document file://changePwd
 aws iam attach-group-policy --group-name MyGroupCli --policy-arn arn:aws:iam::922854651834:policy/changePwd
 ```
 - Test it by logging it to AWS console with this user. Change the password and login with new password.
+![change password](https://github.com/user-attachments/assets/f96854cd-c83e-48d9-a12d-4c4506a627a8)
+
 ---
 
 ### Create Access Keys for a new User
@@ -429,7 +435,7 @@ aws iam remove-user-from-group --user-name MyUserCli --group-name MyGroupCli
 
 ### Delete access key
 ```bash
-aws iam delete-access-key --user-name MyUserCli --access-key-id AKIA5NXTMO65KC3R6XI6
+aws iam delete-access-key --user-name MyUserCli --access-key-id AKIxxxxxxxxxxxxx
 ```
 
 ### Delete user
@@ -454,7 +460,7 @@ aws ec2 terminate-instances --instance-ids i-00c8bbe17ceaa4a4f
                 "Code": 32,
                 "Name": "shutting-down"
             },
-            "InstanceId": "i-00c8bbe18ceaa4a4f",
+            "InstanceId": "i-00c8bbe17ceaa4a4f",
             "PreviousState": {
                 "Code": 16,
                 "Name": "running"
@@ -463,6 +469,10 @@ aws ec2 terminate-instances --instance-ids i-00c8bbe17ceaa4a4f
     ]
 }
 ```
+Verify from AWS console that instance is terminated.
+
+![Instances | EC2 | us-east-1](https://github.com/user-attachments/assets/86883311-d6aa-4a6c-8def-d75a643c9cd2)
+
 
 ### Delete Security Group:
 ```bash
