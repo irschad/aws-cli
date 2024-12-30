@@ -13,7 +13,7 @@ This project demonstrates how to interact with AWS resources using the AWS Comma
 
 ## Prerequisites
 - AWS account credentials.
-- AWS CLI installed on your system. ([Installation Guide](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html))
+- AWS CLI installed on the system. ([Installation Guide](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html))
 - Linux environment.
 
 ---
@@ -407,14 +407,61 @@ Notice that this results in access denied error while attempting to create anoth
 
 
 
-### Detach and Delete IAM Group:
+### Detach group policy:
 ```bash
 aws iam detach-group-policy --group-name MyGroupCli --policy-arn arn:aws:iam::aws:policy/AmazonEC2FullAccess
-aws iam delete-group --group-name MyGroupCli
 ```
+
+### Delete policy:
+```bash
+aws iam delete-policy --policy-arn arn:aws:iam::922854651834:policy/changePwd
+```
+
+### Delete login profile:
+```bash
+aws iam delete-login-profile --user-name MyUserCli
+```
+
+### Remove user from group
+```bash
+aws iam remove-user-from-group --user-name MyUserCli --group-name MyGroupCli
+```
+
+### Delete access key
+```bash
+aws iam delete-access-key --user-name MyUserCli --access-key-id AKIA5NXTMO65KC3R6XI6
+```
+
+### Delete user
+```bash
+aws iam delete-user --user-name MyUserCli
+```
+
+### Delete group
+```bash
+aws iam delete-group --group-name MyGroupCl
+```
+
 ### Terminate EC2 Instances:
 ```bash
 aws ec2 terminate-instances --instance-ids i-00c8bbe17ceaa4a4f
+```
+```json
+{
+    "TerminatingInstances": [
+        {
+            "CurrentState": {
+                "Code": 32,
+                "Name": "shutting-down"
+            },
+            "InstanceId": "i-00c8bbe18ceaa4a4f",
+            "PreviousState": {
+                "Code": 16,
+                "Name": "running"
+            }
+        }
+    ]
+}
 ```
 
 ### Delete Security Group:
@@ -426,10 +473,11 @@ aws ec2 delete-security-group --group-id sg-0f366dec7784c7264
 ```bash
 aws ec2 delete-key-pair --key-name MyKpCli
 ```
-
-### Delete IAM User:
-```bash
-aws iam delete-user --user-name MyUserCli
+```json
+{
+    "Return": true,
+    "KeyPairId": "key-09857c346ba9fcd51"
+}
 ```
 
 
