@@ -405,10 +405,12 @@ aws iam create-access-key --user-name MyUserCli
 ### Switch AWS Users for AWS CLI commands
 --------------------------------------
 - Switch to newly created AWS user. Set the following as environment variables using export command:
- -- export AWS_ACCESS_KEY_ID=AKIxxxxxxxxxxxxx
- -- export AWS_SECRET_ACCESS_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ ```bash 
+ export AWS_ACCESS_KEY_ID=AKIxxxxxxxxxxxxx
+ export AWS_SECRET_ACCESS_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
- -- export AWS_DEFAULT_REGION=eu-west-2
+ export AWS_DEFAULT_REGION=eu-west-2
+ ```
 
 - Test run command to create another user as a new user
 ```bash 
