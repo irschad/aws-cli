@@ -159,7 +159,7 @@ aws ec2 run-instances \
 --subnet-id subnet-03d3ed0a20397d803
 ```
 ```json
---
+
 {
     "Instances": [
         {
@@ -169,7 +169,7 @@ aws ec2 run-instances \
         }
     ]
 }
---
+
 ```
 ---
 ## Step 5: SSH into the new EC2 instance
@@ -234,7 +234,7 @@ aws iam create-user --user-name MyUserCli
         "UserName": "MyUserCli",
         "UserId": "AIDA5NXTMO65HDDV67IYJ",
         "Arn": "arn:aws:iam::922854651834:user/MyUserCli",
-        "CreateDate": "2024-12-29T11:56:14+00:00"
+        "CreateDate": "2024-10-29T11:56:14+00:00"
     }
 }
 ```
@@ -377,8 +377,41 @@ aws iam attach-group-policy --group-name MyGroupCli --policy-arn arn:aws:iam::92
 ```bash
 aws iam create-access-key --user-name MyUserCli
 ```
+```json
+{
+    "AccessKey": {
+        "UserName": "MyUserCli",
+        "AccessKeyId": "AKIxxxxxxxxxxxxx",
+        "Status": "Active",
+        "SecretAccessKey": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "CreateDate": "2024-10-29T14:25:01+00:00"
+    }
+}
+```
+
+### Switch AWS Users for AWS CLI commands
+--------------------------------------
+- Switch to newly created AWS user
+export AWS_ACCESS_KEY_ID=AKIxxxxxxxxxxxxx
+export AWS_SECRET_ACCESS_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+export AWS_DEFAULT_REGION=eu-west-2
+
+- Test run command to create another user as a new user
+```bash 
+aws iam create-user --user-name test
+```
+Notice that this results in access denied error while attempting to create another user as the new user created doesn't have access for same.
 
 ## Step 8: Cleanup - Delete Resources
+
+
+
+### Detach and Delete IAM Group:
+```bash
+aws iam detach-group-policy --group-name MyGroupCli --policy-arn arn:aws:iam::aws:policy/AmazonEC2FullAccess
+aws iam delete-group --group-name MyGroupCli
+```
 ### Terminate EC2 Instances:
 ```bash
 aws ec2 terminate-instances --instance-ids i-00c8bbe17ceaa4a4f
@@ -394,16 +427,11 @@ aws ec2 delete-security-group --group-id sg-0f366dec7784c7264
 aws ec2 delete-key-pair --key-name MyKpCli
 ```
 
-### Detach and Delete IAM Group:
-```bash
-aws iam detach-group-policy --group-name MyGroupCli --policy-arn arn:aws:iam::aws:policy/AmazonEC2FullAccess
-aws iam delete-group --group-name MyGroupCli
-```
-
 ### Delete IAM User:
 ```bash
 aws iam delete-user --user-name MyUserCli
 ```
+
 
 ---
 
