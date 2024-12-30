@@ -404,11 +404,11 @@ aws iam create-access-key --user-name MyUserCli
 
 ### Switch AWS Users for AWS CLI commands
 --------------------------------------
-- Switch to newly created AWS user
-export AWS_ACCESS_KEY_ID=AKIxxxxxxxxxxxxx
-export AWS_SECRET_ACCESS_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+- Switch to newly created AWS user. Set the following as environment variables using export command:
+ -- export AWS_ACCESS_KEY_ID=AKIxxxxxxxxxxxxx
+ -- export AWS_SECRET_ACCESS_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-export AWS_DEFAULT_REGION=eu-west-2
+ -- export AWS_DEFAULT_REGION=eu-west-2
 
 - Test run command to create another user as a new user
 ```bash 
@@ -416,8 +416,8 @@ aws iam create-user --user-name test
 ```
 Notice that this results in access denied error while attempting to create another user as the new user created doesn't have access for same.
 
-## Step 8: Cleanup - Delete Resources
 
+## Step 8: Cleanup - Delete Resources
 
 
 ### Detach group policy:
